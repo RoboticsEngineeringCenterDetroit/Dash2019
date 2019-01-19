@@ -7,12 +7,14 @@
 
 package org.usfirst.frc4680.Dash2019.commands;
 
+import org.usfirst.frc4680.Dash2019.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TeleopDrive extends Command {
   public TeleopDrive() {
     // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.driveTrain);
   }
 
   // Called just before this Command runs the first time
@@ -23,6 +25,9 @@ public class TeleopDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+    double speed = Robot.oi.driveJoystick.getRawAxis(1);
+    double turn = Robot.oi.driveJoystick.getRawAxis(4);
+    Robot.driveTrain.drive(speed, turn);
   }
 
   // Make this return true when this Command no longer needs to run execute()

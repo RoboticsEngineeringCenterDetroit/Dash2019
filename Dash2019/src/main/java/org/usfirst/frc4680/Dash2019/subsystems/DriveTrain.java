@@ -107,5 +107,11 @@ public class DriveTrain extends Subsystem {
     // Put methods for controlling this subsystem
     // here. Call these from Commands.
 
+    public void drive(double speed, double turn) {
+
+        differentialDrive1.arcadeDrive(speed, turn, true);
+        
+    }
+
 }
 
