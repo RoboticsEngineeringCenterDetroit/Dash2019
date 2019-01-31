@@ -7,12 +7,19 @@
 
 package org.usfirst.frc4680.Dash2019.commands;
 
+import org.usfirst.frc4680.Dash2019.Robot;
+import org.usfirst.frc4680.Dash2019.subsystems.DriveTrain;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveDirectionDistance extends Command {
-  public DriveDirectionDistance() {
+  private double targetDirection;
+  private double targetDistance;
+  public DriveDirectionDistance(double direction, double distance) {
     // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+    requires(Robot.driveTrain);
+    targetDirection = direction;
+    targetDistance = distance;
   }
 
   // Called just before this Command runs the first time
