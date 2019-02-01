@@ -59,7 +59,7 @@ public class DriveTrain extends Subsystem {
     private ADXRS450_Gyro gyro;
 
     //TODO calibrate this constant
-    static final double inchesPerEncCount = (25.133 / 4096);
+    private static final double inchesPerEncCount = (25.133 / 4096);
     
     public int countL;
     public int countR;
@@ -205,5 +205,10 @@ public class DriveTrain extends Subsystem {
 
     public int getRightEncoderCount() { return rightDriveTalonA.getSensorCollection().getQuadraturePosition(); }
     public int getLeftEncoderCount() { return -leftDriveTalonA.getSensorCollection().getQuadraturePosition(); }
+
+    public double getSpeed() {
+        int countsPer100ms = rightDriveTalonA.getSensorCollection().getQuadratureVelocity();
+        return countsPer100ms * 10 * inchesPerEncCount; // convert to inches/second
+    }
 }
 
