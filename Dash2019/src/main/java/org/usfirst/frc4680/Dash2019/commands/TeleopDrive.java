@@ -27,6 +27,12 @@ public class TeleopDrive extends Command {
   protected void execute() {
     double speed = Robot.oi.driveJoystick.getRawAxis(1);
     double turn = Robot.oi.driveJoystick.getRawAxis(4);
+    double rTrig = Robot.oi.driveJoystick.getRawAxis(3);
+    double mod = 0.75;
+    if (rTrig > 0.25)
+    {
+      speed *= mod;
+    }
     Robot.driveTrain.drive(speed, turn);
   }
 
