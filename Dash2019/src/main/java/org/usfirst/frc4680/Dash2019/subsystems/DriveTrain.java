@@ -61,8 +61,7 @@ public class DriveTrain extends Subsystem {
 
     private ADXRS450_Gyro gyro;
 
-    //TODO calibrate this constant
-    private static final double inchesPerEncCount = (25.133 / 4096);
+    private static final double inchesPerEncCount = .004549;
     
     public int countL;
     public int countR;
