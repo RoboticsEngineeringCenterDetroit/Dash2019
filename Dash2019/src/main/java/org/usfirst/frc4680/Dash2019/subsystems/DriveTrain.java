@@ -158,7 +158,7 @@ public class DriveTrain extends Subsystem {
 
     public void drive(double speed, double turn) {
 
-        differentialDrive1.arcadeDrive(speed, turn, true);
+        differentialDrive1.arcadeDrive(-speed, turn, true);
         
     }
 
