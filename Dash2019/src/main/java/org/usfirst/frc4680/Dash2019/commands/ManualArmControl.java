@@ -26,7 +26,7 @@ public class ManualArmControl extends Command {
   @Override
   protected void execute() {
     Robot.arm.moveShoulder(Robot.oi.armJoystick.getRawAxis(1));
-    Robot.arm.moveShoulder(Robot.oi.armJoystick.getRawAxis(5));
+    Robot.arm.moveExtension(Robot.oi.armJoystick.getRawAxis(5));
   }
 
   // Make this return true when this Command no longer needs to run execute()
