@@ -34,6 +34,13 @@ public class TeleopDrive extends Command {
       speed *= mod;
     }
     Robot.driveTrain.drive(speed, turn);
+
+    Robot.climber.frontLegsExtend(Robot.oi.driveJoystick.getRawButton(6) );
+    Robot.climber.backLegsExtend(Robot.oi.driveJoystick.getRawButton(5) );
+  
+    if(Robot.climber.isBackLegsExtended()) {
+      Robot.climber.drive(speed);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
