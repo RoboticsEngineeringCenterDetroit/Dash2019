@@ -14,6 +14,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Add your docs here.
  */
+
+// extender sprocket 16 teeth
+// extender chain is #25 
+
+
 public class ArmExtender extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
