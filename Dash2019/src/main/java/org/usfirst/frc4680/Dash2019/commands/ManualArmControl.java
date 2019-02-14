@@ -25,7 +25,10 @@ public class ManualArmControl extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+
+    Robot.arm.enablePID(Robot.oi.armJoystick.getRawButton(5));
     Robot.arm.moveShoulder(Robot.oi.armJoystick.getRawAxis(1));
+
     Robot.armExtender.moveExtension(Robot.oi.armJoystick.getRawAxis(5));
   }
 
