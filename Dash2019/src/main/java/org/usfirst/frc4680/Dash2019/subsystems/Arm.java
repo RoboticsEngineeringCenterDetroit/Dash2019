@@ -33,7 +33,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  */
 public class Arm extends Subsystem {
 
-    public static final double Kp = 0.0;
+    public static final double Kp = 0.01;
     public static final double Ki = 0.0;
     public static final double Kd = 0.0;
     public static final double Kf = 0.1;
@@ -42,7 +42,8 @@ public class Arm extends Subsystem {
     //Zero is with the arm straight horizontal
     public static final double MINIMUM_ANGLE = -30.0;
     public static final double MAXIMUM_ANGLE = 100.0;
-    private static final double degreesPerEncoderCount = 360.0 / 4096;
+    public static final double ANGLE_TOLERANCE = 3.0;
+    private static final double degreesPerEncoderCount = (360.0 / 4096) * (12/60); 
 
     private PIDSourceTalon pivotMotorA;
     private WPI_TalonSRX pivotMotorB;
@@ -62,6 +63,7 @@ public class Arm extends Subsystem {
         
         m_controller = new VerticalArmPIDController(Kp, Ki, Kd, Kf, pivotMotorA, pivotMotorA);
         m_controller.setOutputRange(MINIMUM_ANGLE, MAXIMUM_ANGLE);
+        m_controller.setAbsoluteTolerance(ANGLE_TOLERANCE);
     }
 
     @Override
@@ -78,6 +80,7 @@ public class Arm extends Subsystem {
 
     public void enablePID(boolean flag) {
         if(flag && !m_controller.isEnabled()) {
+            m_controller.setSetpoint( getAngle());
             m_controller.enable();
         }
 
@@ -139,7 +142,7 @@ public class Arm extends Subsystem {
 
         @Override
         protected double calculateFeedForward() {
-            return m_F * Math.cos(Math.toRadians(getAngle()));
+            return getF() * Math.cos(Math.toRadians(getAngle()));
         }
     }
 
