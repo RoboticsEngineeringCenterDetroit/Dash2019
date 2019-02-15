@@ -41,9 +41,10 @@ public class Arm extends Subsystem {
     //TODO calibrate this start angle.
     //Zero is with the arm straight horizontal
     public static final double MINIMUM_ANGLE = -30.0;
-    public static final double MAXIMUM_ANGLE = 100.0;
+    public static final double MAXIMUM_ANGLE = 110.0;
     public static final double ANGLE_TOLERANCE = 3.0;
-    private static final double degreesPerEncoderCount = (360.0 / 4096) * (12/60); 
+    public static final double STARTINGANGLE = 90.0;
+    private static final double degreesPerEncoderCount = (360.0 / 4096) * (12.0/60); 
 
     private PIDSourceTalon pivotMotorA;
     private WPI_TalonSRX pivotMotorB;
@@ -130,7 +131,7 @@ public class Arm extends Subsystem {
 
         public double getAngle() {
             int quadraturePosition = getSensorCollection().getQuadraturePosition();
-            return (quadraturePosition * degreesPerEncoderCount) + MINIMUM_ANGLE;
+            return STARTINGANGLE - (quadraturePosition * degreesPerEncoderCount);
         }   
     }
 
