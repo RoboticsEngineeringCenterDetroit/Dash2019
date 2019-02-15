@@ -80,7 +80,7 @@ public class Arm extends Subsystem {
 
     public void enablePID(boolean flag) {
         if(flag && !m_controller.isEnabled()) {
-            m_controller.setSetpoint( getAngle());
+            m_controller.stop();
             m_controller.enable();
         }
 
@@ -105,7 +105,11 @@ public class Arm extends Subsystem {
     }
 
     public void stop() {
-        pivotMotorA.stopMotor();
+        if(m_controller.isEnabled() ) {
+            m_controller.stop();
+        } else {
+            pivotMotorA.stopMotor();
+        }
     }
 
     public class PIDSourceTalon extends WPI_TalonSRX implements PIDSource {
@@ -144,7 +148,18 @@ public class Arm extends Subsystem {
         protected double calculateFeedForward() {
             return getF() * Math.cos(Math.toRadians(getAngle()));
         }
+
+        void stop() {
+            setSetpoint(get());
+        }
     }
 
+    public void setPosition(double angle) {
+        m_controller.setSetpoint(angle);
+    }
+
+    public boolean isAtSetpoint() {
+        return Math.abs(m_controller.getError()) < ANGLE_TOLERANCE;
+    }
 }
 
