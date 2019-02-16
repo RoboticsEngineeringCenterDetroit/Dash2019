@@ -27,7 +27,15 @@ public class ManualArmControl extends Command {
   protected void execute() {
 
     Robot.arm.enablePID(Robot.oi.armJoystick.getRawButton(5));
-    Robot.arm.moveShoulder(Robot.oi.armJoystick.getRawAxis(1));
+
+    double speed = Robot.oi.armJoystick.getRawAxis(1);
+
+    if(Robot.arm.isPIDenabled()) {
+      Robot.arm.moveShoulderSetpoint(speed);
+    } else {
+      Robot.arm.moveShoulder(speed);
+      Robot.arm.setPosition(Robot.arm.getAngle());
+    }
 
     Robot.armExtender.moveExtension(Robot.oi.armJoystick.getRawAxis(5));
   }

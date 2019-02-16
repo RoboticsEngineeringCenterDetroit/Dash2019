@@ -7,9 +7,12 @@
 
 package org.usfirst.frc4680.Dash2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Add your docs here.
@@ -23,7 +26,10 @@ public class ArmExtender extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-  private WPI_TalonSRX extensionMotor;
+  public static final double inchesPerEncoderCount = (15.0 * 0.375) / 4096.0;
+
+  private CANSparkMax extensionMotor;
+  private CANEncoder encoder;
 
   @Override
   public void initDefaultCommand() {
@@ -33,16 +39,24 @@ public class ArmExtender extends Subsystem {
 
   public ArmExtender() {
             
-    extensionMotor = new WPI_TalonSRX(6);
-
+    extensionMotor = new CANSparkMax(6, MotorType.kBrushed);
+    encoder = new CANEncoder(extensionMotor);
   }
 
   public void moveExtension(double speed) {
-    extensionMotor.set(speed);
+    extensionMotor.set(Math.signum(speed) * speed * speed);
   }
 
   public void stop() {
     extensionMotor.stopMotor();
   }
 
+  public double getPosition() {
+    return encoder.getPosition() * inchesPerEncoderCount;
+  }
+
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Ext Position", getPosition());
+  }
 }

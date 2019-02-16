@@ -33,7 +33,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
  */
 public class Arm extends Subsystem {
 
-    public static final double Kp = 0.01;
+    public static final double Kp = 0.02;
     public static final double Ki = 0.0;
     public static final double Kd = 0.0;
     public static final double Kf = 0.1;
@@ -76,6 +76,9 @@ public class Arm extends Subsystem {
     public void periodic() {
         SmartDashboard.putNumber("Arm Angle", getAngle());
         SmartDashboard.putBoolean("Arm PID On", m_controller.isEnabled());
+        SmartDashboard.putNumber("Arm error", m_controller.getError());
+        SmartDashboard.putNumber("Arm Setpoint", m_controller.getSetpoint());
+        SmartDashboard.putNumber("PID out", m_controller.get());
     }
 
 
@@ -90,19 +93,23 @@ public class Arm extends Subsystem {
         }
     }
 
+    public boolean isPIDenabled() {
+        return m_controller.isEnabled();
+    }
+
 
     public double getAngle() {
         return pivotMotorA.getAngle();
     }
 
-    public void moveShoulder(double speed) {
-        if(m_controller.isEnabled()) {
+    public void moveShoulderSetpoint(double speed) {
             double setpoint = m_controller.getSetpoint();
-            setpoint += (speed / 10);
+            setpoint += (  speed / 10 );
             m_controller.setSetpoint(setpoint);
-        } else {
+    }
+
+    public void moveShoulder(double speed) {
             pivotMotorA.set(speed);
-        }
     }
 
     public void stop() {
@@ -151,7 +158,7 @@ public class Arm extends Subsystem {
         }
 
         void stop() {
-            setSetpoint(get());
+            setSetpoint(getAngle());
         }
     }
 
