@@ -43,7 +43,7 @@ public class Arm extends Subsystem {
     //Zero is with the arm straight horizontal
     public static final double MINIMUM_ANGLE = -30.0;
     public static final double MAXIMUM_ANGLE = 110.0;
-    public static final double ANGLE_TOLERANCE = 3.0;
+    public static final double ANGLE_TOLERANCE = 2.0;
     public static final double STARTINGANGLE = 90.0;
     private static final double degreesPerEncoderCount = (360.0 / 4096) * (12.0/60); 
 
@@ -69,7 +69,7 @@ public class Arm extends Subsystem {
                
         
         m_controller = new VerticalArmPIDController(Kp, Ki, Kd, Kf, pivotMotorA, pivotMotorA);
-        m_controller.setOutputRange(-0.5, 0.5);
+        m_controller.setOutputRange(-0.6, 0.6);
         m_controller.setAbsoluteTolerance(ANGLE_TOLERANCE);
     }
 
@@ -111,10 +111,11 @@ public class Arm extends Subsystem {
     public void moveShoulderSetpoint(double speed) {
             double setpoint = m_controller.getSetpoint();
             setpoint += (  speed / 5.0 );
-            m_controller.setSetpoint(setpoint);
+            setPosition(setpoint);
     }
 
     public void moveShoulder(double speed) {
+            //TODO insert soft limits here?
             pivotMotorA.set(Math.signum(speed) * speed * speed);
     }
 
@@ -169,6 +170,8 @@ public class Arm extends Subsystem {
     }
 
     public void setPosition(double angle) {
+        angle = Math.max(angle, MINIMUM_ANGLE);
+        angle = Math.min(angle, MAXIMUM_ANGLE);
         m_controller.setSetpoint(angle);
     }
 

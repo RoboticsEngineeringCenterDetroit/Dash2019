@@ -37,7 +37,16 @@ public class ManualArmControl extends Command {
       Robot.arm.setPosition(Robot.arm.getAngle());
     }
 
-    Robot.armExtender.moveExtension(Robot.oi.armJoystick.getRawAxis(5));
+    Robot.armExtender.enablePID(Robot.oi.armJoystick.getRawButton(6));
+
+    double extensionSpeed = Robot.oi.armJoystick.getRawAxis(5);
+    if(Robot.armExtender.isPIDenabled())
+    {
+      Robot.armExtender.moveExtensionSetpoint(extensionSpeed);
+    } else {
+      Robot.armExtender.moveExtension(extensionSpeed);
+      Robot.armExtender.setLength(Robot.armExtender.getLength());
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
