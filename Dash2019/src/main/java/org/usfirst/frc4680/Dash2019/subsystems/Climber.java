@@ -68,7 +68,7 @@ public class Climber extends Subsystem {
         doubleSolenoidRear = new DoubleSolenoid(0, 5, 6);
         addChild("Double Solenoid 2",doubleSolenoidRear);
         
-        climberDrive = new CANSparkMax(7, MotorType.kBrushless );
+        climberDrive = new CANSparkMax(8, MotorType.kBrushless );
         climberDrive.setInverted(true);
         climberDrive.setIdleMode(IdleMode.kCoast);
         climberDrive.setParameter(ConfigParameter.kInputDeadband, 0.10);

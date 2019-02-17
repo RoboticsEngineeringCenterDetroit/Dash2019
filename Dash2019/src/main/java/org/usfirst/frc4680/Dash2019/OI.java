@@ -70,7 +70,7 @@ public class OI {
         
         arm90button = new JoystickButton(armJoystick, 4);
         arm90button.whenPressed(new MoveArmTo(90));
-        arm0button = new JoystickButton(armJoystick, 3);
+        arm0button = new JoystickButton(armJoystick, 2);
         arm0button.whenPressed(new MoveArmTo(0));
 
         // SmartDashboard Buttons
