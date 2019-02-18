@@ -33,8 +33,8 @@ public class ManualArmControl extends Command {
     if(Robot.arm.isPIDenabled()) {
       Robot.arm.moveShoulderSetpoint(speed);
     } else {
-      Robot.arm.moveShoulder(speed);
-      Robot.arm.setPosition(Robot.arm.getAngle());
+      Robot.arm.move(speed);
+      Robot.arm.setAngle(Robot.arm.getAngle());
     }
 
     Robot.armExtender.enablePID(Robot.oi.armJoystick.getRawButton(6));
@@ -44,7 +44,7 @@ public class ManualArmControl extends Command {
     {
       Robot.armExtender.moveExtensionSetpoint(extensionSpeed);
     } else {
-      Robot.armExtender.moveExtension(extensionSpeed);
+      Robot.armExtender.move(extensionSpeed);
       Robot.armExtender.setLength(Robot.armExtender.getLength());
     }
   }

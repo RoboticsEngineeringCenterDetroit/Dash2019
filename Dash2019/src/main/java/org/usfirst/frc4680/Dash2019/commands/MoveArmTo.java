@@ -44,7 +44,7 @@ public class MoveArmTo extends Command   {
   protected void execute() {
     double angleDelta = m_targetAngle - Robot.arm.getAngle();
     angleDelta = Utility.clamp(angleDelta, -DELTA_ANGLE_MAX, DELTA_ANGLE_MAX);
-    Robot.arm.setPosition(Robot.arm.getAngle() + angleDelta);
+    Robot.arm.setAngle(Robot.arm.getAngle() + angleDelta);
 
     double lenDelta = m_targetLength - Robot.armExtender.getLength();
     lenDelta = Utility.clamp(lenDelta, -DELTA_LENGTH_MAX, DELTA_LENGTH_MAX);
@@ -54,7 +54,7 @@ public class MoveArmTo extends Command   {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return Robot.arm.isAtSetpoint() && Robot.armExtender.isAtSetpoint();
+    return Robot.arm.onTarget() && Robot.armExtender.onTarget();
   }
 
   // Called once after isFinished returns true
