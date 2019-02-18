@@ -22,8 +22,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ArmExtender extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
+  public static final double Kp = 0.02;
+  public static final double Ki = 0.0;
+  public static final double Kd = 0.0;
+  public static final double Kf = 0.0;
+
   public static final double MAX_LENGTH = 58.0;
   public static final double MIN_LENGTH = 22.5;
   public static final double MAX_HORIZONTAL_LENGTH = 17.25 + 30.0;
@@ -44,11 +47,6 @@ public class ArmExtender extends Subsystem {
 
   public ArmExtender() {
             
-    public static final double Kp = 0.02;
-    public static final double Ki = 0.0;
-    public static final double Kd = 0.0;
-    public static final double Kf = 0.0;
-
     extensionMotor = new PIDSourceTalon(6);
     extensionMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
     extensionMotor.getSensorCollection().setQuadraturePosition(0, 10);
@@ -89,7 +87,8 @@ public class ArmExtender extends Subsystem {
 
   public double getMaxLength() {
     double angle_radians = Math.toRadians(Robot.arm.getAngle());
-    double envelope_limit = MAX_HORIZONTAL_LENGTH * Math.cos(angle_radians);
+    //TODO do we need to explictly handle division by zero here?
+    double envelope_limit = MAX_HORIZONTAL_LENGTH / Math.cos(angle_radians);
     return Math.min(MAX_LENGTH, envelope_limit);
   }
 
@@ -135,7 +134,12 @@ public class ArmExtender extends Subsystem {
           super(p, i, d, f, src, out);
       }
 
-      //TODO override calculateFeedForward based on arm angle
+
+      @Override
+      protected double calculateFeedForward() {
+        double angle_radians = Math.toRadians(Robot.arm.getAngle());
+        return getF() * Math.sin(angle_radians);
+      }
 
       void stop() {
           setSetpoint(getLength());
@@ -156,6 +160,10 @@ public class ArmExtender extends Subsystem {
   public boolean isPIDenabled() {
     return m_controller.isEnabled();
   }
+
+public boolean isAtSetpoint() {
+	return Math.abs(m_controller.getError()) < LENGTH_TOLERANCE;
+}
 
 }
 

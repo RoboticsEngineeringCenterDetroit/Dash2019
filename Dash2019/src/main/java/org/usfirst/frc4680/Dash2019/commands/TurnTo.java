@@ -13,6 +13,7 @@ package org.usfirst.frc4680.Dash2019.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc4680.Dash2019.Robot;
+import org.usfirst.frc4680.Dash2019.Utility;
 import org.usfirst.frc4680.Dash2019.subsystems.DriveTrain;
 
 public class TurnTo extends Command {
@@ -21,6 +22,7 @@ public class TurnTo extends Command {
      */
 
     private static final double tolerance = 1.0;
+    private static final double MAX_DELTA = 360.0/(4.0 * 50.0);
     private double targetHeading;
 
     public TurnTo(double angle) {
@@ -36,16 +38,20 @@ public class TurnTo extends Command {
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
-        Robot.driveTrain.directionDrive(0, targetHeading);
+        double heading = Robot.driveTrain.getHeading();
+        double delta = DriveTrain.angleDelta(heading, targetHeading);
+        delta = Utility.clamp(delta, -MAX_DELTA, MAX_DELTA);
+
+        Robot.driveTrain.directionDrive(0, heading + delta);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     @Override
     protected boolean isFinished() {
         double heading = Robot.driveTrain.getHeading();
-        double difference = Math.abs(DriveTrain.angleDelta(heading, targetHeading));
+        double delta = DriveTrain.angleDelta(heading, targetHeading);
 
-        return difference < tolerance;
+        return Math.abs(delta) < tolerance;
     }
 
     // Called once after isFinished returns true
