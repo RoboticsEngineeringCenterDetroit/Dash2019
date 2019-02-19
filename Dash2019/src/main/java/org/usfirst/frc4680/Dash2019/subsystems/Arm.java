@@ -24,7 +24,7 @@ public class Arm extends TalonPIDSubsystem {
     public static final double Kp = 0.02;
     public static final double Ki = 0.0;
     public static final double Kd = 0.0;
-    public static final double Kf = 0.1;
+    public static final double Kf = 0.2;
 
     //Zero is with the arm straight horizontal
     public static final double MINIMUM_ANGLE = -30.0;
