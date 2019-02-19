@@ -8,6 +8,7 @@
 package org.usfirst.frc4680.Dash2019.commands;
 
 import org.usfirst.frc4680.Dash2019.Robot;
+import org.usfirst.frc4680.Dash2019.Utility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -39,7 +40,8 @@ public class TeleopDrive extends Command {
     Robot.climber.backLegsExtend(Robot.oi.driveJoystick.getRawButton(5) );
   
     if(Robot.climber.isBackLegsExtended()) {
-      Robot.climber.drive(speed);
+      double climbSpeed = Utility.clamp(speed, -0.5, 0.5);
+      Robot.climber.drive(climbSpeed);
     }
   }
 

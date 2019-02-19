@@ -13,12 +13,12 @@ public class DoNothingCommand extends Command {
   public DoNothingCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    System.out.println("Doing Nothing");
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    System.out.println("Doing Nothing");
   }
 
   // Called repeatedly when this Command is scheduled to run

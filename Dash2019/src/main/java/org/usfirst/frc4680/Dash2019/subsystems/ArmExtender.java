@@ -7,21 +7,15 @@
 
 package org.usfirst.frc4680.Dash2019.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import org.usfirst.frc4680.Dash2019.Robot;
-
-import edu.wpi.first.wpilibj.PIDController;
+import org.usfirst.frc4680.Dash2019.TalonPIDSubsystem;
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class ArmExtender extends Subsystem {
+public class ArmExtender extends TalonPIDSubsystem {
   public static final double Kp = 0.02;
   public static final double Ki = 0.0;
   public static final double Kd = 0.0;
@@ -36,8 +30,16 @@ public class ArmExtender extends Subsystem {
   public static final double inchesPerEncoderCount = (15.0 * 0.375) / 4096.0;
 
 
-  private PIDSourceTalon extensionMotor;
-  private ArmExtenderPIDController m_controller;
+
+  public ArmExtender() {
+            
+    m_talon = new PIDSourceTalon(6);
+    m_talon.setName("extensionTalon");
+    m_talon.setNeutralMode(NeutralMode.Brake);
+
+    m_controller = new ArmExtenderPIDController(Kp, Ki, Kd, Kf, m_talon, m_talon);
+    m_controller.setAbsoluteTolerance(LENGTH_TOLERANCE);
+  }
 
   @Override
   public void initDefaultCommand() {
@@ -45,44 +47,28 @@ public class ArmExtender extends Subsystem {
     // setDefaultCommand(new MySpecialCommand());
   }
 
-  public ArmExtender() {
-            
-    extensionMotor = new PIDSourceTalon(6);
-    extensionMotor.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
-    extensionMotor.getSensorCollection().setQuadraturePosition(0, 10);
-    extensionMotor.setName("extensionTalon");
-    extensionMotor.setNeutralMode(NeutralMode.Brake);
-
-    m_controller = new ArmExtenderPIDController(Kp, Ki, Kd, Kf, extensionMotor, extensionMotor);
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Ext Position", getLength());
+    SmartDashboard.putNumber("Max Length", getMaxLength());
   }
 
   public void moveExtensionSetpoint(double speed) {
-    double setpoint = m_controller.getSetpoint();
-    setpoint += (  speed / 5.0 );
-    setLength(setpoint);
+    double pos = getLength();
+    pos += (  speed / 5.0 );
+    setLength(pos);
   }
 
-
-  public void moveExtension(double speed) {
-    extensionMotor.set(Math.signum(speed) * speed * speed);
-  }
-
-  public void stop() {
-    if(m_controller.isEnabled() ) {
-        m_controller.stop();
-    } else {
-        extensionMotor.stopMotor();
-    }
-}
 
   public double getLength() {
-    return extensionMotor.getLength();
+    return MIN_LENGTH + (m_talon.pidGet() * inchesPerEncoderCount);
   }
 
   public void setLength(double len) {
     len = Math.max(len, getMinLength());
     len = Math.min(len, getMaxLength());
-    m_controller.setSetpoint(len);
+    double counts = (len - MIN_LENGTH) / inchesPerEncoderCount;
+    m_controller.setSetpoint(counts);
   }
 
   public double getMaxLength() {
@@ -97,73 +83,19 @@ public class ArmExtender extends Subsystem {
     return MIN_LENGTH;
   }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Ext Position", getLength());
-    SmartDashboard.putNumber("Max Length", getMaxLength());
-  }
 
-  public class PIDSourceTalon extends WPI_TalonSRX implements PIDSource {
-    @Override
-    public PIDSourceType getPIDSourceType() {
-        return PIDSourceType.kDisplacement;
-    }
-
-    @Override
-    public double pidGet() {
-        return getLength();
-    }
-
-    @Override
-    public void setPIDSourceType(PIDSourceType pidSource) {
-        // do nothing
-    }
-
-    PIDSourceTalon(int CANid) {
-        super(CANid);
-    }
-
-    public double getLength() {
-      return MIN_LENGTH + (extensionMotor.getSensorCollection().getQuadraturePosition() * inchesPerEncoderCount);
-    }   
-}
-
-
-  public class ArmExtenderPIDController extends PIDController {
+  public class ArmExtenderPIDController extends TalonPIDController {
     ArmExtenderPIDController(double p, double i, double d, double f, PIDSource src, PIDOutput out) {
           super(p, i, d, f, src, out);
       }
-
 
       @Override
       protected double calculateFeedForward() {
         double angle_radians = Math.toRadians(Robot.arm.getAngle());
         return getF() * Math.sin(angle_radians);
       }
-
-      void stop() {
-          setSetpoint(getLength());
-      }
   }
 
-  public void enablePID(boolean flag) {
-    if(flag && !m_controller.isEnabled()) {
-        m_controller.stop();
-        m_controller.enable();
-    }
-
-    if(!flag && m_controller.isEnabled()) {
-        m_controller.disable();
-    }
-  }
-
-  public boolean isPIDenabled() {
-    return m_controller.isEnabled();
-  }
-
-public boolean isAtSetpoint() {
-	return Math.abs(m_controller.getError()) < LENGTH_TOLERANCE;
-}
 
 }
 
