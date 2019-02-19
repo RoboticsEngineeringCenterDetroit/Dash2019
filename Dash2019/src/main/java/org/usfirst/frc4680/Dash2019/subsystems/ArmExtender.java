@@ -21,7 +21,7 @@ public class ArmExtender extends TalonPIDSubsystem {
   public static final double Kd = 0.0;
   public static final double Kf = 0.0;
 
-  public static final double MAX_LENGTH = 58.0;
+  public static final double MAX_LENGTH = 50.0;
   public static final double MIN_LENGTH = 22.5;
   public static final double MAX_HORIZONTAL_LENGTH = 17.25 + 30.0;
   public static final double LENGTH_TOLERANCE = 1;

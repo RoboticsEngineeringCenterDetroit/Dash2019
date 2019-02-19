@@ -87,7 +87,6 @@ public abstract class TalonPIDSubsystem extends Subsystem  {
             super(CANid);
             this.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
             this.getSensorCollection().setQuadraturePosition(0, 10);
-    
         }
     }
 }
