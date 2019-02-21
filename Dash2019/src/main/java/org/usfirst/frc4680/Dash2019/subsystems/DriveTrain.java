@@ -72,7 +72,6 @@ public class DriveTrain extends Subsystem {
         leftDriveTalonB.getSensorCollection().setQuadraturePosition(0, 10);
         
         
-        
         leftSpeedControllerGroup = new SpeedControllerGroup( leftDriveTalonB  );
         addChild("LeftSpeedControllerGroup",leftSpeedControllerGroup);
 

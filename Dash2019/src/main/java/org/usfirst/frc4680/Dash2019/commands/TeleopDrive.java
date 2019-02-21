@@ -36,9 +36,20 @@ public class TeleopDrive extends Command {
     }
     Robot.driveTrain.drive(speed, turn);
 
-    Robot.climber.frontLegsExtend(Robot.oi.driveJoystick.getRawButton(6) );
-    Robot.climber.backLegsExtend(Robot.oi.driveJoystick.getRawButton(5) );
-  
+    if(Robot.oi.driveJoystick.getRawButton(5)) {
+      Robot.climber.backLegsExtend(true);
+      if(Robot.oi.driveJoystick.getRawButton(6)) {
+        Robot.climber.frontLegsExtend(false);
+      } else {
+        Robot.climber.frontLegsExtend(true);
+      }
+    } else {
+      Robot.climber.backLegsExtend(false);
+      Robot.climber.frontLegsExtend(false);
+    }
+
+    
+    
     if(Robot.climber.isBackLegsExtended()) {
       double climbSpeed = Utility.clamp(speed, -0.5, 0.5);
       Robot.climber.drive(climbSpeed);
