@@ -26,7 +26,7 @@ public class ManualArmControl extends Command {
   @Override
   protected void execute() {
 
-    Robot.arm.enablePID(Robot.oi.armJoystick.getRawButton(5));
+    Robot.arm.enablePID(!Robot.oi.armJoystick.getRawButton(5));
 
     double speed = Robot.oi.armJoystick.getRawAxis(1);
 

@@ -49,7 +49,7 @@ public abstract class TalonPIDSubsystem extends Subsystem  {
     }
 
     public void move(double speed) {
-        m_talon.set(Math.signum(speed) * speed * speed);
+        m_talon.set(-Math.signum(speed) * speed * speed);
     }
     
     
@@ -88,5 +88,12 @@ public abstract class TalonPIDSubsystem extends Subsystem  {
             this.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 10);
             this.getSensorCollection().setQuadraturePosition(0, 10);
         }
+
     }
+
+    public void setP(double x) { m_controller.setP(x); }
+    public void setI(double x) { m_controller.setI(x); }
+    public void setD(double x) { m_controller.setD(x); }
+    public void setF(double x) { m_controller.setF(x); }
+
 }
