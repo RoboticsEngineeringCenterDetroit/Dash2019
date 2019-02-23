@@ -29,7 +29,8 @@ public class ArmExtender extends TalonPIDSubsystem {
   // 15 tooth sprocket, #35 chain has 3/8" pitch
   public static final double inchesPerEncoderCount = (15.0 * 0.375) / 4096.0;
 
-
+  public static double toInches(double encoderCounts) { return encoderCounts * inchesPerEncoderCount; }
+  public static double toCounts(double inches) { return inches / inchesPerEncoderCount; }
 
   public ArmExtender() {
             
@@ -61,19 +62,18 @@ public class ArmExtender extends TalonPIDSubsystem {
 
 
   public double getLength() {
-    return MIN_LENGTH + (m_talon.pidGet() * inchesPerEncoderCount);
+    return MIN_LENGTH + toInches(m_talon.pidGet());
   }
 
   public void setLength(double len) {
     len = Math.max(len, getMinLength());
     len = Math.min(len, getMaxLength());
-    double counts = (len - MIN_LENGTH) / inchesPerEncoderCount;
+    double counts = toCounts(len - MIN_LENGTH);
     m_controller.setSetpoint(counts);
   }
 
   public double getMaxLength() {
     double angle_radians = Math.toRadians(Robot.arm.getAngle());
-    //TODO do we need to explictly handle division by zero here?
     double envelope_limit = MAX_HORIZONTAL_LENGTH / Math.cos(angle_radians);
     return Math.min(MAX_LENGTH, envelope_limit);
   }
