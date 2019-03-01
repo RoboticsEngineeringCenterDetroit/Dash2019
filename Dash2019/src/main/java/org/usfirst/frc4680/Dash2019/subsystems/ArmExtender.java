@@ -10,20 +10,22 @@ package org.usfirst.frc4680.Dash2019.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import org.usfirst.frc4680.Dash2019.Robot;
 import org.usfirst.frc4680.Dash2019.TalonPIDSubsystem;
+import org.usfirst.frc4680.Dash2019.Utility;
+
 import edu.wpi.first.wpilibj.PIDOutput;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ArmExtender extends TalonPIDSubsystem {
-  public static final double Kp = 0.02;
+  public static final double Kp = 0.0005;
   public static final double Ki = 0.0;
   public static final double Kd = 0.0;
   public static final double Kf = 0.0;
 
   public static final double MAX_LENGTH = 50.0;
   public static final double MIN_LENGTH = 22;
-  public static final double MAX_HORIZONTAL_LENGTH = 17.25 + 30.0;
+  public static final double MAX_HORIZONTAL_LENGTH = 17.25 + 30.0 - 4.0;
   public static final double LENGTH_TOLERANCE = 1;
 
   // 15 tooth sprocket, #35 chain has 3/8" pitch
@@ -37,6 +39,7 @@ public class ArmExtender extends TalonPIDSubsystem {
     m_talon = new PIDSourceTalon(6);
     m_talon.setName("extensionTalon");
     m_talon.setNeutralMode(NeutralMode.Brake);
+    m_talon.setInverted(true);
 
     m_controller = new ArmExtenderPIDController(Kp, Ki, Kd, Kf, m_talon, m_talon);
     m_controller.setAbsoluteTolerance(LENGTH_TOLERANCE);
@@ -50,13 +53,19 @@ public class ArmExtender extends TalonPIDSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Ext Position", getLength());
-    SmartDashboard.putNumber("Max Length", getMaxLength());
+    double len = getLength();
+    double max_len = getMaxLength();
+    SmartDashboard.putNumber("Ext Position", len);
+    SmartDashboard.putNumber("Max Length", max_len);
+    if(isPIDenabled() && len > max_len)
+    {
+      setLength(max_len);
+    }
   }
 
   public void moveExtensionSetpoint(double speed) {
     double pos = getLength();
-    pos += (  speed / 5.0 );
+    pos += (  speed / 2.0 );
     setLength(pos);
   }
 
@@ -66,8 +75,7 @@ public class ArmExtender extends TalonPIDSubsystem {
   }
 
   public void setLength(double len) {
-    len = Math.max(len, getMinLength());
-    len = Math.min(len, getMaxLength());
+    len = Utility.clamp(len, getMinLength(), getMaxLength());
     double counts = toCounts(len - MIN_LENGTH);
     m_controller.setSetpoint(counts);
   }
