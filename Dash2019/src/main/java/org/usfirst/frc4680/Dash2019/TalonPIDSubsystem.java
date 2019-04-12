@@ -49,7 +49,7 @@ public abstract class TalonPIDSubsystem extends Subsystem  {
     }
 
     public void move(double speed) {
-        m_talon.set(-Math.signum(speed) * speed * speed);
+        m_talon.set(-speed);
     }
     
     

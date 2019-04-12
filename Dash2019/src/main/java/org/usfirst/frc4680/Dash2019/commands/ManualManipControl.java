@@ -8,6 +8,7 @@
 package org.usfirst.frc4680.Dash2019.commands;
 
 import org.usfirst.frc4680.Dash2019.Robot;
+import org.usfirst.frc4680.Dash2019.Utility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -26,6 +27,7 @@ public class ManualManipControl extends Command {
   @Override
   protected void execute() {
     double grabberSpeed = Robot.oi.armJoystick.getRawAxis(2) - Robot.oi.armJoystick.getRawAxis(3);
+    grabberSpeed = Utility.squaredInput(grabberSpeed);
     Robot.manipulator.moveGrabber(grabberSpeed);
 
     Robot.manipulator.ejectHatch(Robot.oi.armJoystick.getRawButton(1));

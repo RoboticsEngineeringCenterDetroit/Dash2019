@@ -8,6 +8,7 @@
 package org.usfirst.frc4680.Dash2019.commands;
 
 import org.usfirst.frc4680.Dash2019.Robot;
+import org.usfirst.frc4680.Dash2019.Utility;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -29,6 +30,7 @@ public class ManualArmControl extends Command {
     Robot.arm.enablePID(!Robot.oi.armJoystick.getRawButton(5));
 
     double speed = Robot.oi.armJoystick.getRawAxis(1);
+    speed = Utility.squaredInput(speed);
 
     if(Robot.arm.isPIDenabled()) {
       Robot.arm.moveShoulderSetpoint(speed);
@@ -40,6 +42,8 @@ public class ManualArmControl extends Command {
     Robot.armExtender.enablePID(Robot.oi.armJoystick.getRawButton(6));
 
     double extensionSpeed = Robot.oi.armJoystick.getRawAxis(5);
+    extensionSpeed = Utility.squaredInput(extensionSpeed);
+    
     if(Robot.armExtender.isPIDenabled())
     {
       Robot.armExtender.moveExtensionSetpoint(extensionSpeed);

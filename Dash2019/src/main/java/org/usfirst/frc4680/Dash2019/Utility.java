@@ -15,4 +15,8 @@ public class Utility {
         return Math.max(low, Math.min(value, high));
       }
     
+    public static double squaredInput(double x) {
+      x = clamp(x, -1.0, 1.0);
+      return Math.signum(x) * x * x;
+    }
 }
