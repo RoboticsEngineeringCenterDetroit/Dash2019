@@ -32,6 +32,10 @@ public class ManualArmControl extends Command {
     double speed = Robot.oi.armJoystick.getRawAxis(1);
     speed = Utility.squaredInput(speed);
 
+    if(Robot.oi.armJoystick.getRawButton(4)) {
+      speed = 0; //holding the arm in place
+    }
+
     if(Robot.arm.isPIDenabled()) {
       Robot.arm.moveShoulderSetpoint(speed);
     } else {
