@@ -26,9 +26,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 public class Arm extends TalonPIDSubsystem {
 
-    public static final double Kp_default = 0.0005;
+    public static final double Kp_default = 0.0004;
     public static final double Ki_default = 0.0;
-    public static final double Kd_default = 0.0;
+    public static final double Kd_default = 0.00005;
     public static final double Kf_default = 0.1;
 
     private double Kp;
